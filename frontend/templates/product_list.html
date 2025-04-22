@@ -1,0 +1,16 @@
+<h1>Product List</h1>
+<form method="GET">
+    <label for="category">Category:</label>
+    <input type="text" name="category" id="category">
+    <label for="min_price">Min Price:</label>
+    <input type="number" name="min_price" id="min_price">
+    <label for="max_price">Max Price:</label>
+    <input type="number" name="max_price" id="max_price">
+    <button type="submit">Filter</button>
+</form>
+
+<ul>
+    {% for product in products %}
+        <li>{{ product.name }} - ${{ product.price }}</li>
+    {% endfor %}
+</ul>
