@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>شارژ کیف پول</h2>
+  <p>موجودی فعلی: {{ wallet.balance }} تومان</p>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">شارژ</button>
+  </form>
+
+  <a href="{% url 'home' %}">بازگشت به خانه</a>
+{% endblock %}

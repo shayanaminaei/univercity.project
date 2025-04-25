@@ -1,0 +1,12 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>پروفایل من</h2>
+  <p><strong>نام کاربری:</strong> {{ user.username }}</p>
+  <p><strong>ایمیل:</strong> {{ user.email }}</p>
+  <p><strong>موجودی کیف پول:</strong> {{ wallet.balance }} تومان</p>
+
+  <a href="{% url 'wallet_topup' %}">شارژ کیف پول</a><br>
+  <a href="{% url 'home' %}">صفحه اصلی</a><br>
+  <a href="{% url 'logout' %}">خروج</a>
+{% endblock %}
