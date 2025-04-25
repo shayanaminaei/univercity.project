@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-
-from backend.accounts import views  # include برای اضافه کردن مسیرهای اپلیکیشن‌ها
+from apps.accounts import views 
+# include برای اضافه کردن مسیرهای اپلیکیشن‌ها
 
 urlpatterns = [
     path('admin/', admin.site.urls),  # مسیر پیش‌فرض برای پنل مدیریت جنگو
