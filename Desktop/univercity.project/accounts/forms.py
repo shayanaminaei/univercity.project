@@ -45,4 +45,4 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 class WalletTopUpForm(forms.Form):
-    amount = forms.IntegerField(min_value=1000, label='مبلغ (تومان)')
+ amount = forms.DecimalField(max_digits=10, decimal_places=2, min_value=0.01, label='مقدار شارژ')

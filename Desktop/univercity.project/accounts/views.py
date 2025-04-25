@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Wallet
+from .models import Wallet, UserProfile
 
 
 # Create your views here.
@@ -61,20 +61,38 @@ def user_logout(request):
     return redirect('login')
 
 @login_required
-def wallet_topup_view(request):
-    wallet = Wallet.objects.get(user=request.user)
-
+def wallet_topup(request):
     if request.method == 'POST':
         form = WalletTopUpForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
+            wallet = Wallet.objects.get(user=request.user)
             wallet.balance += amount
             wallet.save()
-            return redirect('wallet')  # بعداً صفحه wallet رو هم می‌سازیم
+            return redirect('profile')  # بعد از شارژ کیف پول کاربر به صفحه پروفایل هدایت می‌شود
+    else:
+        form = WalletTopUpForm()
+    
+    return render(request, 'accounts/wallet_topup.html', {'form': form})
+
+def wallet_topup_view(request):
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+
+    if request.method == 'POST':
+        form = WalletTopUpForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data.get('amount')
+            if amount is not None:
+                profile.wallet += amount
+                profile.save()
+                return redirect('home')  # یا هر آدرس دلخواه
+            else:
+                form.add_error('amount', 'مقدار شارژ نمی‌تواند خالی باشد.')
     else:
         form = WalletTopUpForm()
 
-    return render(request, 'accounts/wallet_topup.html', {'form': form, 'wallet': wallet})
+    return render(request, 'wallet_topup.html', {'form': form})
 
 def profile_view(request):
     wallet, created = Wallet.objects.get_or_create(user=request.user)
@@ -86,3 +104,13 @@ def profile_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')  # یا صفحه‌ی دلخواه شما بعد از خروج
+
+def home_view(request):
+    # اینجا می‌تونید لیستی از صفحات خودتون رو داشته باشید
+    pages = [
+        {"name": "پروفایل", "url": "profile"},
+        {"name": "شارژ کیف پول", "url": "wallet_topup"},
+        {"name": "صفحه اصلی", "url": "home"},
+        {"name": "خروج", "url": "logout"},
+    ]
+    return render(request, 'home.html', {'pages': pages})

@@ -1,7 +1,9 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager,AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager,AbstractUser, User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
+
 
 
 class CustomUserManager(BaseUserManager):
@@ -59,3 +61,10 @@ class Wallet(models.Model):
 def create_wallet_for_new_user(sender, instance, created, **kwargs):
     if created:
         Wallet.objects.create(user=instance)
+        
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    wallet = models.FloatField(default=0.0)
+
+    def __str__(self):
+        return self.user.username
